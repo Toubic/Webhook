@@ -1,0 +1,29 @@
+{
+  "name": "tj22fe-examination",
+  "version": "1.0.0",
+  "description": "Programming assignment",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1dv612/tj22fe-examination.git"
+  },
+  "keywords": [
+    "assignment",
+    "2",
+    "programming"
+  ],
+  "author": "Tobias Johansson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/1dv612/tj22fe-examination/issues"
+  },
+  "homepage": "https://github.com/1dv612/tj22fe-examination#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "mongoose": "^4.8.6"
+  }
+}
