@@ -4,6 +4,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var slack = require("simple-slack-webhook");
+var exhand = require("express-handlebars");
 
 try {
 
@@ -25,8 +26,14 @@ try {
     mongoose.connect(config.database.credentials);
     var db = mongoose.connection;
 
+    app.engine('hb', exhand({
+        defaultLayout: 'index',
+        extname: 'hb'
+    }));
+    app.set('view engine', 'hb');
+
     app.get("/", function (req, res) {
-        res.send("test");
+        res.render('options');
     });
 
 }
