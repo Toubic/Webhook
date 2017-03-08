@@ -33,7 +33,7 @@ try {
     app.set('view engine', 'hb');
 
     app.get("/", function (req, res) {
-        res.render('options');
+        res.render('dashboard');
     });
 
 }
