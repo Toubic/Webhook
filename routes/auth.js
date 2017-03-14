@@ -3,7 +3,7 @@
 var express = require("express");
 var router = express.Router();
 var passport = require("passport");
-var orgs = require( 'github-user-orgs' );
+var orgs = require("github-user-orgs");
 
 router.get("/",
     passport.authenticate('github', { failureRedirect: 'https://github.com/' }),
