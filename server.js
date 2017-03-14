@@ -52,7 +52,7 @@ try {
     };
 
     var ghCallback = function(accessToken, refreshToken, profile, done) {
-        done(null, profile);
+        done(null, {profile: profile, accessToken: accessToken});
     };
 
     passport.use(new GitHubStrategy(ghOptions, ghCallback));

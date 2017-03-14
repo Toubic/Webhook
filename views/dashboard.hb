@@ -1,4 +1,6 @@
-<h1>Test dashboard<h1>
-{{#each profile}}
+<h1>Dashboard<h1>
+<p>User: {{profile}}</p>
+<p>Organizations:</p>
+{{#each organizations}}
     <p>{{this.[login]}}</p>
 {{/each}}
