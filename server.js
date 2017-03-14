@@ -12,6 +12,8 @@ var path = require("path");
 try {
 
     var app = express();
+    app.listen(process.env.PORT || 5000);
+
     var config = require("./config/config");
     var options = require("./routes/options");
     var auth = require("./routes/auth");
@@ -31,8 +33,6 @@ try {
     });
     app.use('/options', options);
     app.use('/auth/github/callback', auth);
-
-    app.listen(process.env.PORT || 5000);
 
     mongoose.connect(config.database.credentials);
     var db = mongoose.connection;
