@@ -1,6 +1,6 @@
 <h1>Dashboard<h1>
-<p>User: {{profile}}</p>
-<p>Organizations:</p>
+<h2>User: <h3>{{profile}}</h3></h2>
+<h2>Organizations:</h2>
 {{#each organizations}}
-    <p>{{this.[login]}}</p>
+    <h3>{{this.[login]}}</h3>
 {{/each}}

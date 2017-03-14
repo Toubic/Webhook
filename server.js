@@ -7,12 +7,12 @@ var mongoose = require("mongoose");
 var slack = require("simple-slack-webhook");
 var passport = require("passport");
 var GitHubStrategy = require("passport-github").Strategy;
+var path = require("path");
 
 try {
 
     var app = express();
     var config = require("./config/config");
-    var dashboard = require("./routes/dashboard");
     var options = require("./routes/options");
     var auth = require("./routes/auth");
 
@@ -29,8 +29,6 @@ try {
     passport.deserializeUser(function(user, done) {
         done(null, user);
     });
-
-    app.use('/dashboard', dashboard);
     app.use('/options', options);
     app.use('/auth/github/callback', auth);
 
@@ -58,6 +56,13 @@ try {
     passport.use(new GitHubStrategy(ghOptions, ghCallback));
 
     app.get("/", passport.authenticate('github'));
+
+    app.get("/css/bootstrap.min.css", function(req, res) {
+        res.sendFile(path.join(__dirname + "/css/bootstrap.min.css"));
+    });
+    app.get("/css/light-bootstrap-dashboard.css", function(req, res) {
+        res.sendFile(path.join(__dirname + "/css/light-bootstrap-dashboard.css"));
+    });
 
 }
 
