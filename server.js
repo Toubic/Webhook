@@ -46,7 +46,7 @@ try {
     var ghOptions = {
         clientID: config.passport.GITHUB_CLIENT_ID,
         clientSecret: config.passport.GITHUB_CLIENT_SECRET,
-        callbackURL: "https://githubdashboardhub.herokuapp.com/auth/github/callback"
+        callbackURL: "https://shrouded-hamlet-39019.herokuapp.com/auth/github/callback"
     };
 
     var ghCallback = function(accessToken, refreshToken, profile, done) {
