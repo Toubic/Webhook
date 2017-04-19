@@ -57,11 +57,19 @@ try {
 
     app.get("/", passport.authenticate('github'));
 
+    app.get("/test", function (req, res) {
+        res.render('dashboard');
+    });
+
     app.get("/css/bootstrap.min.css", function(req, res) {
         res.sendFile(path.join(__dirname + "/css/bootstrap.min.css"));
     });
     app.get("/css/light-bootstrap-dashboard.css", function(req, res) {
         res.sendFile(path.join(__dirname + "/css/light-bootstrap-dashboard.css"));
+    });
+
+    app.get("/js/Chart.min.js", function(req, res) {
+        res.sendFile(path.join(__dirname + "/js/Chart.min.js"));
     });
 
 }
