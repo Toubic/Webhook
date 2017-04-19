@@ -155,6 +155,11 @@ body,
   position: relative;
 }
 
+input[type='checkbox'] {
+  transform: scale(3);
+  padding: 10px;
+}
+
 a {
   color: #1DC7EA;
 }

@@ -57,13 +57,13 @@ try {
 
     app.get("/", passport.authenticate('github'));
 
-    app.get("/logout", function (req, res) {
+    app.get("/logout", function(req, res) {
         req.logout();
-        res.redirect('/');
+        res.redirect("/");
     });
 
     app.get("/test", function (req, res) {
-        res.render('dashboard');
+        res.render('options');
     });
 
     app.get("/css/bootstrap.min.css", function(req, res) {
