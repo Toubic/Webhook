@@ -57,6 +57,11 @@ try {
 
     app.get("/", passport.authenticate('github'));
 
+    app.get("/logout", function (req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+
     app.get("/test", function (req, res) {
         res.render('dashboard');
     });

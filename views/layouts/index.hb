@@ -52,6 +52,22 @@
 
         <div class="main-panel">
 
+            <nav class="navbar navbar-default navbar-fixed">
+                        <div class="container-fluid">
+                            <div class="collapse navbar-collapse">
+
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li>
+                                        <a href="/logout">
+                                            Log out
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+
+
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">
