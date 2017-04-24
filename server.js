@@ -46,7 +46,7 @@ try {
     var ghOptions = {
         clientID: config.passport.GITHUB_CLIENT_ID,
         clientSecret: config.passport.GITHUB_CLIENT_SECRET,
-        callbackURL: "https://shrouded-hamlet-39019.herokuapp.com/auth/github/callback"
+        callbackURL: "http://localhost:5000/auth/github/callback"
     };
 
     var ghCallback = function(accessToken, refreshToken, profile, done) {
@@ -62,8 +62,9 @@ try {
         res.redirect("/");
     });
 
-    app.get("/test", function (req, res) {
-        res.render('options');
+    app.get("/test", passport.authenticate('github'), function (req, res) {
+
+        res.render('dashboard');
     });
 
     app.get("/css/bootstrap.min.css", function(req, res) {

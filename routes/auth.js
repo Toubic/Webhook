@@ -3,34 +3,59 @@
 var express = require("express");
 var router = express.Router();
 var passport = require("passport");
-var orgs = require("github-user-orgs");
 var octonode = require("octonode");
 
 router.get("/",
     passport.authenticate('github', { failureRedirect: 'https://github.com/' }),
     function(req, res) {
 
-        console.log(req.user.accessToken);
         var client = octonode.client(req.user.accessToken);
 
-        client.get('/user', {}, function (err, status, body, headers) {
-            console.log(body); //json object
-        });
-        var opts = {
-            "username": req.user.profile.username
-        };
+        function organizationsToDatabase(username) {
 
-        orgs(opts, clbk);
+            client.get('/users/'+ username +'/orgs', {}, function (err, status, body, headers) {
 
-        function clbk(err, results, info) {
-            if (info) {
-                console.error(info);
-            }
-            if (err) {
-                throw new Error(err.message);
-            }
-            res.render('dashboard',{profile: req.user.profile.username, organizations: results});
+                body.forEach(function(organization) {
+                    console.log(organization.login); //Save to database
+                });
+
+            });
         }
+
+        function repositoriesToDatabase(organization) {
+
+            client.get('/orgs/' + organization + '/repos', {}, function (err, status, body, headers) {
+                body.forEach(function(repository) {
+                    console.log(repository.name); //Save to database
+                });
+            });
+        }
+
+        function commitsToDatabase(organization, repository) {
+
+            client.get('/repos/' + organization + '/' + repository + '/commits', {}, function (err, status, body, headers) {
+
+                body.forEach(function(commit) {
+                    console.log(commit.author.login + ": " + commit.commit.message); //Save to database
+                });
+            });
+        }
+
+        function releasesToDatabase(organization, repository) {
+
+            client.get('/repos/' + organization + '/' + repository + '/releases', {}, function (err, status, body, headers) {
+
+                body.forEach(function(release) {
+                    console.log(release.author.login + ": " + release.tag_name + " - " + release.name + " - " + release.body); //Save to database
+                });
+            });
+        }
+
+        organizationsToDatabase(req.user.profile.username);
+        repositoriesToDatabase("exam2");
+        commitsToDatabase("exam2", "test");
+        releasesToDatabase("exam2", "test");
+        res.render('dashboard',{profile: req.user.profile.username});
 
     }
 );
