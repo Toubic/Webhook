@@ -4,25 +4,17 @@ var express = require("express");
 var router = express.Router();
 var passport = require("passport");
 var orgs = require("github-user-orgs");
-var GitHub = require("octocat");
+var octonode = require("octonode");
 
 router.get("/",
     passport.authenticate('github', { failureRedirect: 'https://github.com/' }),
     function(req, res) {
-        var client = new GitHub({
-            token: req.user.accessToken
-        });
-        client.post('/orgs/exam2/hooks', {
-            "name": "web",
-            "active": true,
-            "events": [
-                "push",
-                "pull_request"
-            ],
-            "config": {
-                "url": "http://example.com/webhook",
-                "content_type": "json"
-            }
+
+        console.log(req.user.accessToken);
+        var client = octonode.client(req.user.accessToken);
+
+        client.get('/user', {}, function (err, status, body, headers) {
+            console.log(body); //json object
         });
         var opts = {
             "username": req.user.profile.username
