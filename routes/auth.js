@@ -66,9 +66,7 @@ router.get("/callback",
 
         function repositoriesToDatabase(organization) {
 
-            var ghorg = client.org(req.user.profile.username);
-
-            ghorg.hook({
+            client.post('/orgs/' + organization + '/repos', {
                 "name": "thehook",
                 "active": true,
                 "events": ["push", "pull_request"],
@@ -76,12 +74,6 @@ router.get("/callback",
                     "url": "https://shrouded-hamlet-39019.herokuapp.com"
                 }
             }, function (err, status, body, headers) {
-                console.log(err);
-                console.log(status);
-                console.log(body);
-            });
-
-            client.post('/orgs/' + organization + '/repos', ghorg.hook, function (err, status, body, headers) {
                 console.log(err);
                 console.log(status);
                 console.log(body);
