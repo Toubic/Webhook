@@ -3,7 +3,6 @@
 var express = require("express");
 var exhand = require("express-handlebars");
 var bodyParser = require("body-parser");
-var mongoose = require("mongoose");
 var slack = require("simple-slack-webhook");
 var passport = require("passport");
 var GitHubStrategy = require("passport-github").Strategy;
@@ -18,9 +17,6 @@ try {
     var options = require("./routes/options");
     var auth = require("./routes/auth");
 
-    if (config.database.credentials === undefined)
-        throw new Error("No database credentials given");
-
     app.use(bodyParser.json());
     app.use(passport.initialize());
 
@@ -33,9 +29,6 @@ try {
     });
     app.use('/options', options);
     app.use('/auth/github/callback', auth);
-
-    mongoose.connect(config.database.credentials);
-    var db = mongoose.connection;
 
     app.engine('hb', exhand({
         defaultLayout: 'index',
