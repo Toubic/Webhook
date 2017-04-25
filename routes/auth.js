@@ -16,7 +16,7 @@ router.get("/",
             client.get('/users/'+ username +'/orgs', {}, function (err, status, body, headers) {
 
                 body.forEach(function(organization) {
-                    console.log(organization.login); //Save to database
+                    repositoriesToDatabase(organization.login);
                 });
 
             });
@@ -26,7 +26,9 @@ router.get("/",
 
             client.get('/orgs/' + organization + '/repos', {}, function (err, status, body, headers) {
                 body.forEach(function(repository) {
-                    console.log(repository.name); //Save to database
+
+                    commitsToDatabase(organization, repository.name);
+                    releasesToDatabase(organization, repository.name);
                 });
             });
         }
@@ -35,9 +37,22 @@ router.get("/",
 
             client.get('/repos/' + organization + '/' + repository + '/commits', {}, function (err, status, body, headers) {
 
-                body.forEach(function(commit) {
-                    console.log(commit.author.login + ": " + commit.commit.message); //Save to database
-                });
+                if(body.message !== "Git Repository is empty.") {
+
+                    body.forEach(function (commit) {
+
+                        var commitJSON = {
+                            type: "Commit",
+                            organization: organization,
+                            repository: repository,
+                            author: commit.author.login,
+                            message: commit.commit.message,
+                            read: false
+                        };
+                        commitJSON = JSON.stringify(commitJSON);
+                        console.log(commitJSON); //Save to database
+                    });
+                }
             });
         }
 
@@ -45,16 +60,28 @@ router.get("/",
 
             client.get('/repos/' + organization + '/' + repository + '/releases', {}, function (err, status, body, headers) {
 
-                body.forEach(function(release) {
-                    console.log(release.author.login + ": " + release.tag_name + " - " + release.name + " - " + release.body); //Save to database
-                });
+                if(body.message !== "Git Repository is empty.") {
+
+                    body.forEach(function (release) {
+                        var releaseJSON = {
+                            type: "Release",
+                            organization: organization,
+                            repository: repository,
+                            author: release.author.login,
+                            version: release.tag_name,
+                            title: release.name,
+                            message: release.body,
+                            read: false
+                        };
+                        releaseJSON = JSON.stringify(releaseJSON);
+                        console.log(releaseJSON); //Save to database
+                    });
+
+                }
             });
         }
 
         organizationsToDatabase(req.user.profile.username);
-        repositoriesToDatabase("exam2");
-        commitsToDatabase("exam2", "test");
-        releasesToDatabase("exam2", "test");
         res.render('dashboard',{profile: req.user.profile.username});
 
     }
