@@ -28,7 +28,7 @@ try {
         done(null, user);
     });
     app.use('/options', options);
-    app.use('/auth/github/callback', auth);
+    app.use('/auth/github', auth);
 
     app.engine('hb', exhand({
         defaultLayout: 'index',

@@ -43,6 +43,11 @@ if (config.database.credentials === undefined)
     throw new Error("No database credentials given");
 
 router.get("/",
+    passport.authenticate('github', { scope: [ 'admin:org_hook' ] }),
+    function(req, res){
+    });
+
+router.get("/callback",
     passport.authenticate('github', { failureRedirect: 'https://github.com/' }),
     function(req, res) {
 
@@ -60,6 +65,27 @@ router.get("/",
         }
 
         function repositoriesToDatabase(organization) {
+
+            var ghorg = client.org(req.user.profile.username);
+
+            ghorg.hook({
+                "name": "thehook",
+                "active": true,
+                "events": ["push", "pull_request"],
+                "config": {
+                    "url": "https://shrouded-hamlet-39019.herokuapp.com"
+                }
+            }, function (err, status, body, headers) {
+                console.log(err);
+                console.log(status);
+                console.log(body);
+            });
+
+            client.post('/orgs/' + organization + '/repos', ghorg.hook, function (err, status, body, headers) {
+                console.log(err);
+                console.log(status);
+                console.log(body);
+            });
 
             client.get('/orgs/' + organization + '/repos', {}, function (err, status, body, headers) {
                 body.forEach(function(repository) {
