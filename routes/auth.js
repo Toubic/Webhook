@@ -156,10 +156,4 @@ router.get("/callback",
     }
 );
 
-router.post("/callback",
-    function(req, res){
-        console.log(req.body);
-        res.render('dashboard',{ payload: req.body});
-    });
-
 module.exports = router;

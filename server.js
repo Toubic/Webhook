@@ -8,6 +8,7 @@ var passport = require("passport");
 var GitHubStrategy = require("passport-github2").Strategy;
 var octonode = require("octonode");
 var path = require("path");
+var webhookHandler = GithubWebHook({ path: '/auth/github/callback', secret: 'secret' });
 
 try {
 
@@ -20,6 +21,7 @@ try {
 
     app.use(bodyParser.json());
     app.use(passport.initialize());
+    app.use(webhookHandler);
 
     passport.serializeUser(function(user, done) {
         done(null, user);
@@ -65,6 +67,10 @@ try {
 
     app.get("/js/Chart.min.js", function(req, res) {
         res.sendFile(path.join(__dirname + "/js/Chart.min.js"));
+    });
+
+    webhookHandler.on('*', function (event, repo, data) {
+        console.log(data);
     });
 
 }
