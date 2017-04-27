@@ -30,13 +30,8 @@ var ReleaseSchema = new Schema({
     read: Boolean
 });
 
-var PayloadSchema = new Schema({
-    message: String
-});
-
 var Commits = mongoose.model('Commits', CommitSchema);
 var Releases = mongoose.model('Releases', ReleaseSchema);
-var Payloads = mongoose.model('Payloads', PayloadSchema);
 
 var db = mongoose.connection;
 
@@ -59,13 +54,13 @@ router.get("/callback",
             client.get('/users/'+ username +'/orgs', {}, function (err, status, body, headers) {
 
                 body.forEach(function(organization) {
-                    repositoriesToDatabase(organization.login);
+                    createGithubWebhook(organization.login);
                 });
 
             });
         }
 
-        function repositoriesToDatabase(organization) {
+        function createGithubWebhook(organization) {
 
             var ghorg = client.org(organization);
 
@@ -81,67 +76,6 @@ router.get("/callback",
                 console.log(err);
                 console.log(status);
                 console.log(body);
-            });
-
-            client.get('/orgs/' + organization + '/repos', {}, function (err, status, body, headers) {
-                body.forEach(function(repository) {
-
-                    commitsToDatabase(organization, repository.name);
-                    releasesToDatabase(organization, repository.name);
-                });
-            });
-        }
-
-        function commitsToDatabase(organization, repository) {
-
-            client.get('/repos/' + organization + '/' + repository + '/commits', {}, function (err, status, body, headers) {
-
-                if(body.message !== "Git Repository is empty.") {
-
-                    body.forEach(function (commit) {
-
-                        var commit = new Commits ({
-                            type: "Commit",
-                            organization: organization,
-                            repository: repository,
-                            author: commit.author.login,
-                            message: commit.commit.message,
-                            read: false
-                        });
-
-                        commit.save(function (err) {
-                            if (err)
-                                return console.log(err);
-                        });
-                    });
-                }
-            });
-        }
-
-        function releasesToDatabase(organization, repository) {
-
-            client.get('/repos/' + organization + '/' + repository + '/releases', {}, function (err, status, body, headers) {
-
-                if(body.message !== "Git Repository is empty.") {
-
-                    body.forEach(function (release) {
-                        var release = new Releases ({
-                            type: "Release",
-                            organization: organization,
-                            repository: repository,
-                            author: release.author.login,
-                            version: release.tag_name,
-                            title: release.name,
-                            message: release.body,
-                            read: false
-                        });
-                        release.save(function (err) {
-                            if (err)
-                                return console.log(err);
-                        });
-                    });
-
-                }
             });
         }
 
@@ -161,18 +95,39 @@ router.get("/callback",
 router.post("/callback",
     function(req, res){
 
-        var pload = req.body;
+        var webhookPayload = req.body;
 
-        console.log(pload.ref);
+        if(webhookPayload.commits) {
+            var commit = new Commits({
+                type: "Commit",
+                organization: webhookPayload.organization.login,
+                repository: webhookPayload.repository.name,
+                author: webhookPayload.sender.login,
+                message: webhookPayload.commits.message,
+                read: false
+            });
 
-        var payload = new Payloads ({
-            message: pload.ref
-        });
-
-        payload.save(function (err) {
-            if (err)
-                return console.log(err);
-        });
+            commit.save(function (err) {
+                if (err)
+                    return console.log(err);
+            });
+        }
+        else {
+            var release = new Releases ({
+                type: "Release",
+                organization: webhookPayload.organization.login,
+                repository: webhookPayload.repository.name,
+                author: webhookPayload.sender.login,
+                version: webhookPayload.release.tag_name,
+                title: webhookPayload.release.name,
+                message: webhookPayload.release.body,
+                read: false
+            });
+            release.save(function (err) {
+                if (err)
+                    return console.log(err);
+            });
+        }
         res.sendStatus(200);
     });
 
