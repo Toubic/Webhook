@@ -159,8 +159,11 @@ router.get("/callback",
 
 router.post("/callback",
     function(req, res){
+
+        var pload = JSON.parse(req.body);
+
         var payload = new Payloads ({
-            message: req.body.ref
+            message: pload.ref
         });
 
         payload.save(function (err) {
