@@ -161,7 +161,7 @@ router.get("/callback",
 router.post("/callback",
     function(req, res){
 
-        var pload = JSON.parse(req.body);
+        var pload = req.body;
 
         console.log(pload.ref);
 
