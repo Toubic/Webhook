@@ -19,8 +19,6 @@ var CommitSchema = new Schema({
     read: Boolean
 });
 
-CommitSchema.index({unique: true});
-
 var ReleaseSchema = new Schema({
     type: String,
     organization: String,
@@ -32,10 +30,13 @@ var ReleaseSchema = new Schema({
     read: Boolean
 });
 
-ReleaseSchema.index({unique: true});
+var PayloadSchema = new Schema({
+    message: String
+});
 
 var Commits = mongoose.model('Commits', CommitSchema);
 var Releases = mongoose.model('Releases', ReleaseSchema);
+var Payloads = mongoose.model('Payloads', PayloadSchema);
 
 var db = mongoose.connection;
 
@@ -155,5 +156,18 @@ router.get("/callback",
 
     }
 );
+
+router.post("/callback",
+    function(req, res){
+        var payload = new Payloads ({
+            message: req.body.ref
+        });
+
+        payload.save(function (err) {
+            if (err)
+                return console.log(err);
+        });
+        res.sendStatus(200);
+    });
 
 module.exports = router;
