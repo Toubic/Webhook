@@ -213,6 +213,14 @@ router.get("/logout", function(req, res) {
         }
     );
 
+    // Update commits to read:
+
+    Releases.update({notRead: true}, {notRead: false}, {multi: true},
+        function(err, num) {
+            console.log("updated "+num);
+        }
+    );
+
     req.logout();
     res.redirect("https://github.com/");
 });
