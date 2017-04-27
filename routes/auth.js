@@ -144,7 +144,7 @@ router.post("/callback",
 
             // Send email to user:
 
-            var requestCommits = sg.emptyRequest({
+            var request = sg.emptyRequest({
                 method: 'POST',
                 path: '/v3/mail/send',
                 body: {
@@ -170,7 +170,7 @@ router.post("/callback",
                 }
             });
 
-            sg.API(requestCommits, function (error, response) {
+            sg.API(request, function (error, response) {
                 if (error) {
                     console.log('Error response received');
                 }
@@ -201,7 +201,7 @@ router.post("/callback",
 
             // Send email to user:
 
-            var requestRelease = sg.emptyRequest({
+            var request = sg.emptyRequest({
                 method: 'POST',
                 path: '/v3/mail/send',
                 body: {
@@ -227,7 +227,7 @@ router.post("/callback",
                 }
             });
 
-            sg.API(requestRelease, function (error, response) {
+            sg.API(request, function (error, response) {
                 if (error) {
                     console.log('Error response received');
                 }
