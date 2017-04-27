@@ -58,7 +58,7 @@
 
                                 <ul class="nav navbar-nav navbar-right">
                                     <li>
-                                        <a href="/logout">
+                                        <a href="/auth/github/logout">
                                             Log out
                                         </a>
                                     </li>

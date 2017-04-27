@@ -131,4 +131,17 @@ router.post("/callback",
         res.sendStatus(200);
     });
 
+router.get("/logout", function(req, res) {
+
+    // Updates read commits:
+    Commits.update({notRead: true}, {notRead: false}, {multi: true},
+        function(err, num) {
+            console.log("updated "+num);
+        }
+    );
+
+    req.logout();
+    res.redirect("https://github.com/");
+});
+
 module.exports = router;
