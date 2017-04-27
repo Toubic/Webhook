@@ -158,7 +158,11 @@ router.get("/callback",
 
 router.post("/callback",
     function(req, res){
-        res.render('dashboard',{ payload: req.body});
+        var payload = document.querySelector("#payload");
+        var text = document.createTextNode("hej");
+        var pElement = document.createElement("p");
+        pElement.appendChild(text);
+        payload.appendChild(pElement);
     });
 
 module.exports = router;
