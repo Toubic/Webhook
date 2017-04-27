@@ -74,7 +74,8 @@ router.get("/callback",
                 "active": true,
                 "events": ["push", "release"],
                 "config": {
-                    "url": "https://shrouded-hamlet-39019.herokuapp.com/auth/github/callback"
+                    "url": "https://shrouded-hamlet-39019.herokuapp.com/auth/github/callback",
+                    "content_type": "json"
                 }
             }, function (err, status, body, headers) {
                 console.log(err);
