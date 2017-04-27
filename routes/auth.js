@@ -157,9 +157,8 @@ router.get("/callback",
 );
 
 router.post("/callback",
-    passport.authenticate('github', { scope: [ 'admin:org_hook' ] }),
     function(req, res){
-        res.render('dashboard',{profile: req.user.profile.username, payload: req.body});
+        res.render('dashboard',{ payload: req.body});
     });
 
 module.exports = router;
