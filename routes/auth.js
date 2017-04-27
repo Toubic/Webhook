@@ -97,11 +97,20 @@ router.get("/callback",
 
         organizationsToDatabase(req.user.profile.username);
 
+        var commits;
+
         Commits.find({}, function(err, commits){
             if(err){
                 console.log(err);
             } else{
-                res.render('dashboard',{profile: req.user.profile.username, commits: commits});
+                commits = commits;
+                Releases.find({}, function(err, releases){
+                    if(err){
+                        console.log(err);
+                    } else{
+                        res.render('dashboard',{profile: req.user.profile.username, commits: commits, releases: releases});
+                    }
+                }).lean();
             }
         }).lean();
 
