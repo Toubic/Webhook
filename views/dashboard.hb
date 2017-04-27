@@ -4,6 +4,8 @@
 <div id="payload">
 </div>
 {{#each commits}}
-    <h4>Organization: {{this.[organization]}} - Repository: {{this.[repository]}}
-    - Author: {{this.[author]}} - Message: {{this.[message]}} </h4>
+    {{#if {{this.[notRead]}}}}
+        <h4>Organization: {{this.[organization]}} - Repository: {{this.[repository]}}
+        - Author: {{this.[author]}} - Message: {{this.[message]}} </h4>
+    {{/if}}
 {{/each}}
