@@ -8,8 +8,39 @@ var passport = require("passport");
 var GitHubStrategy = require("passport-github2").Strategy;
 var octonode = require("octonode");
 var path = require("path");
+var mongoose = require("mongoose");
+var config = require("./config/config");
 
 try {
+
+    mongoose.connect(config.database.credentials);
+
+    var Schema = mongoose.Schema;
+
+    var CommitSchema = new Schema({
+        type: String,
+        organization: String,
+        repository: String,
+        author: String,
+        message: String,
+        notRead: Boolean
+    });
+
+    var ReleaseSchema = new Schema({
+        type: String,
+        organization: String,
+        repository: String,
+        author: String,
+        version: String,
+        title: String,
+        message: String,
+        notRead: Boolean
+    });
+
+    var Commits = mongoose.model('Commits', CommitSchema);
+    var Releases = mongoose.model('Releases', ReleaseSchema);
+
+    var db = mongoose.connection;
 
     var app = express();
     app.listen(process.env.PORT || 5000);
@@ -52,6 +83,13 @@ try {
     app.get("/", passport.authenticate('github', { scope: [ 'admin:org_hook' ] }));
 
     app.get("/logout", function(req, res) {
+
+        Commits.update({notRead: True}, {notRead: false}, {multi: true},
+            function(err, num) {
+                console.log("updated "+num);
+            }
+        );
+
         req.logout();
         res.redirect("https://github.com/");
     });
