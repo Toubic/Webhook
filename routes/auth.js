@@ -66,12 +66,14 @@ router.get("/callback",
 
         function repositoriesToDatabase(organization) {
 
-            client.post('/orgs/' + organization + '/repos', {
-                "name": "thehook",
+            var ghorg = client.org(organization);
+
+            ghorg.hook({
+                "name": "web",
                 "active": true,
-                "events": ["push", "pull_request"],
+                "events": ["push", "release"],
                 "config": {
-                    "url": "https://shrouded-hamlet-39019.herokuapp.com"
+                    "url": "https://shrouded-hamlet-39019.herokuapp.com/auth/github/callback"
                 }
             }, function (err, status, body, headers) {
                 console.log(err);
@@ -153,5 +155,11 @@ router.get("/callback",
 
     }
 );
+
+router.post("/callback",
+    passport.authenticate('github', { scope: [ 'admin:org_hook' ] }),
+    function(req, res){
+        res.render('dashboard',{profile: req.user.profile.username, payload: req.body});
+    });
 
 module.exports = router;

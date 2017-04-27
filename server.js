@@ -5,7 +5,8 @@ var exhand = require("express-handlebars");
 var bodyParser = require("body-parser");
 var slack = require("simple-slack-webhook");
 var passport = require("passport");
-var GitHubStrategy = require("passport-github").Strategy;
+var GitHubStrategy = require("passport-github2").Strategy;
+var octonode = require("octonode");
 var path = require("path");
 
 try {
@@ -48,16 +49,11 @@ try {
 
     passport.use(new GitHubStrategy(ghOptions, ghCallback));
 
-    app.get("/", passport.authenticate('github'));
+    app.get("/", passport.authenticate('github', { scope: [ 'admin:org_hook' ] }));
 
     app.get("/logout", function(req, res) {
         req.logout();
-        res.redirect("/");
-    });
-
-    app.get("/test", passport.authenticate('github'), function (req, res) {
-
-        res.render('dashboard');
+        res.redirect("https://github.com/");
     });
 
     app.get("/css/bootstrap.min.css", function(req, res) {
