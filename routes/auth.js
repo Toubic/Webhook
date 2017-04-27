@@ -104,7 +104,7 @@ router.post("/callback",
                 repository: webhookPayload.repository.name,
                 author: webhookPayload.sender.login,
                 message: webhookPayload.head_commit.message,
-                notRead: false
+                notRead: true
             });
 
             commit.save(function (err) {
@@ -121,7 +121,7 @@ router.post("/callback",
                 version: webhookPayload.release.tag_name,
                 title: webhookPayload.release.name,
                 message: webhookPayload.release.body,
-                notRead: false
+                notRead: true
             });
             release.save(function (err) {
                 if (err)
