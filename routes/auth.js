@@ -103,7 +103,7 @@ router.post("/callback",
                 organization: webhookPayload.organization.login,
                 repository: webhookPayload.repository.name,
                 author: webhookPayload.sender.login,
-                message: webhookPayload.commits.message,
+                message: webhookPayload.head_commit.message,
                 read: false
             });
 
