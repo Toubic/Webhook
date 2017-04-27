@@ -198,6 +198,32 @@ router.post("/callback",
                 if (err)
                     return console.log(err);
             });
+
+            var request = sg.emptyRequest({
+                method: 'POST',
+                path: '/v3/mail/send',
+                body: {
+                    personalizations: [
+                        {
+                            to: [
+                                {
+                                    email: webhookPayload.head_commit.author.email
+                                }
+                            ],
+                            subject: 'Hello a new release has been added!'
+                        }
+                    ],
+                    from: {
+                        email: 'noreply@githubdashboard.com'
+                    },
+                    content: [
+                        {
+                            type: 'text/plain',
+                            value: 'Organization: ' + webhookPayload.organization.login + ' - Repository: ' + webhookPayload.repository.name + ' - Author: ' + webhookPayload.sender.login + ' - Version: ' + webhookPayload.release.tag_name + ' - Title: ' + webhookPayload.release.name + ' - Message: ' + webhookPayload.release.body + ' '
+                        }
+                    ]
+                }
+            });
         }
         res.sendStatus(200);
     });
