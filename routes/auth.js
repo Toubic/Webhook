@@ -16,7 +16,7 @@ var CommitSchema = new Schema({
     repository: String,
     author: String,
     message: String,
-    read: Boolean
+    notRead: Boolean
 });
 
 var ReleaseSchema = new Schema({
@@ -27,7 +27,7 @@ var ReleaseSchema = new Schema({
     version: String,
     title: String,
     message: String,
-    read: Boolean
+    notRead: Boolean
 });
 
 var Commits = mongoose.model('Commits', CommitSchema);
