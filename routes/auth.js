@@ -6,6 +6,7 @@ var passport = require("passport");
 var octonode = require("octonode");
 var mongoose = require("mongoose");
 var config = require("./../config/config");
+var sg = require('sendgrid')(config.sendgrid.SENDGRID_API_KEY);
 mongoose.connect(config.database.credentials);
 
 var Schema = mongoose.Schema;
@@ -111,6 +112,42 @@ router.post("/callback",
                 if (err)
                     return console.log(err);
             });
+
+            var request = sg.emptyRequest({
+                method: 'POST',
+                path: '/v3/mail/send',
+                body: {
+                    personalizations: [
+                        {
+                            to: [
+                                {
+                                    email: webhookPayload.head_commit.author.email
+                                }
+                            ],
+                            subject: 'Hello a new commit has been added!'
+                        }
+                    ],
+                    from: {
+                        email: 'noreply@githubdashboard.com'
+                    },
+                    content: [
+                        {
+                            type: 'text/plain',
+                            value: 'Organization: ' + webhookPayload.organization.login + ' - Repository: ' + webhookPayload.repository.name + ' - Author: ' + webhookPayload.sender.login + ' - Message: ' + webhookPayload.head_commit.message + ' '
+                        }
+                    ]
+                }
+            });
+
+            sg.API(request, function (error, response) {
+                if (error) {
+                    console.log('Error response received');
+                }
+                console.log(response.statusCode);
+                console.log(response.body);
+                console.log(response.headers);
+            });
+
         }
         else {
             var release = new Releases ({

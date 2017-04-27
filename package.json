@@ -30,7 +30,7 @@
     "octonode": "^0.7.12",
     "passport": "^0.3.2",
     "passport-github2": "^0.1.10",
-    "simple-slack-webhook": "0.0.5"
+    "sendgrid": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

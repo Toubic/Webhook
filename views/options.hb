@@ -1,5 +1,5 @@
 <div class="col-md-4">
-<h1>Slack notifications</h1>
+<h1>Email notifications</h1>
 <br>
 <form>
 <div class="col-md-4">
