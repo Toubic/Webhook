@@ -7,6 +7,9 @@ var octonode = require("octonode");
 var mongoose = require("mongoose");
 var config = require("./../config/config");
 var sg = require('sendgrid')(config.sendgrid.SENDGRID_API_KEY);
+
+// Setup database:
+
 mongoose.connect(config.database.credentials);
 
 var Schema = mongoose.Schema;
@@ -48,7 +51,14 @@ router.get("/callback",
     passport.authenticate('github', { failureRedirect: 'https://github.com/' }),
     function(req, res) {
 
+        //Create client for GitHub API requests:
+
         var client = octonode.client(req.user.accessToken);
+
+        /***
+         * Get organizations from GitHub API.
+         * @param username
+         */
 
         function organizationsToDatabase(username) {
 
@@ -60,6 +70,11 @@ router.get("/callback",
 
             });
         }
+
+        /***
+         * Creat Webhook for organizations.
+         * @param organization
+         */
 
         function createGithubWebhook(organization) {
 
@@ -96,9 +111,14 @@ router.get("/callback",
 router.post("/callback",
     function(req, res){
 
+        //GitHub Webhook payload:
+
         var webhookPayload = req.body;
 
         if(webhookPayload.commits) {
+
+            // Save commit to database:
+
             var commit = new Commits({
                 type: "Commit",
                 organization: webhookPayload.organization.login,
@@ -112,6 +132,8 @@ router.post("/callback",
                 if (err)
                     return console.log(err);
             });
+
+            // Send email to user:
 
             var request = sg.emptyRequest({
                 method: 'POST',
@@ -150,6 +172,9 @@ router.post("/callback",
 
         }
         else {
+
+            // Save release to database:
+
             var release = new Releases ({
                 type: "Release",
                 organization: webhookPayload.organization.login,
@@ -170,7 +195,8 @@ router.post("/callback",
 
 router.get("/logout", function(req, res) {
 
-    // Updates read commits:
+    // Update commits to read:
+
     Commits.update({notRead: true}, {notRead: false}, {multi: true},
         function(err, num) {
             console.log("updated "+num);

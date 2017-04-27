@@ -3,7 +3,6 @@
 var express = require("express");
 var exhand = require("express-handlebars");
 var bodyParser = require("body-parser");
-var slack = require("simple-slack-webhook");
 var passport = require("passport");
 var GitHubStrategy = require("passport-github2").Strategy;
 var octonode = require("octonode");
@@ -28,6 +27,7 @@ try {
     passport.deserializeUser(function(user, done) {
         done(null, user);
     });
+
     app.use('/options', options);
     app.use('/auth/github', auth);
 
@@ -36,6 +36,8 @@ try {
         extname: 'hb'
     }));
     app.set('view engine', 'hb');
+
+    // OAuth application config:
 
     var ghOptions = {
         clientID: config.passport.GITHUB_CLIENT_ID,
